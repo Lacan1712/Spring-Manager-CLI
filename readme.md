@@ -44,7 +44,7 @@ O projeto será configurado com as dependências e arquivos básicos necessário
 
 #### 2. `init --custom`
 
-O comando `init -costum` é utilizado para inicializar um novo projeto mas com parâmetros personalizados.
+O comando `init -custom` é utilizado para inicializar um novo projeto mas com parâmetros personalizados.
 
 *Uso:*
 
