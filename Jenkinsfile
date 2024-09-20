@@ -25,7 +25,8 @@ pipeline {
             }
             steps {
                 script {
-                    dir("/home/rodrigo/Downloads") {  // Alterado para o diretório desejado
+                    // Use o diretório do workspace do Jenkins
+                    dir("${env.WORKSPACE}") {  
                         sh '''
                         go version  # Verifica se o Go está disponível
                         GOOS=linux GOARCH=amd64 go build -o nome-do-app-linux
@@ -42,7 +43,8 @@ pipeline {
             }
             steps {
                 script {
-                    dir("/home/rodrigo/Downloads") {  // Alterado para o diretório desejado
+                    // Use o diretório do workspace do Jenkins
+                    dir("${env.WORKSPACE}") {  
                         sh '''
                         go version  # Verifica se o Go está disponível
                         GOOS=windows GOARCH=amd64 go build -o nome-do-app-windows.exe
