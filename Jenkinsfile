@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'localhost' }
+    environment {
+        PATH = "${env.PATH}:/usr/local/go/bin"
+    }
     stages { 
         stage('Clone') {
             when {
@@ -22,7 +25,7 @@ pipeline {
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}/Download") {
+                    dir("/home/rodrigo/Downloads") {  // Alterado para o diretório desejado
                         sh '''
                         go version  # Verifica se o Go está disponível
                         GOOS=linux GOARCH=amd64 go build -o nome-do-app-linux
@@ -39,7 +42,7 @@ pipeline {
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}/Download") { // Usando o diretório correto
+                    dir("/home/rodrigo/Downloads") {  // Alterado para o diretório desejado
                         sh '''
                         go version  # Verifica se o Go está disponível
                         GOOS=windows GOARCH=amd64 go build -o nome-do-app-windows.exe
