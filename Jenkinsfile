@@ -1,16 +1,15 @@
 pipeline {
-    agent any
-    stages {
+    agent {label 'localhost' }
+    stages { 
         stage('Clone') {
             when {
                 anyOf {
                     branch 'develop'
-                    branch 'feature/*'
                 }
             }
             steps {
                 checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/develop']], // Você pode alterar isso se quiser que a branch específica mude.
+                    branches: [[name: '*/develop']],
                     userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
                 ])
             }
@@ -19,12 +18,11 @@ pipeline {
             when {
                 anyOf {
                     branch 'develop'
-                    branch 'feature/*'
                 }
             }
             steps {
                 script {
-                    dir('~/Download') { // Altere para o diretório correto onde o Go está
+                    dir('~/Download') {
                         sh '''
                         GOOS=linux GOARCH=amd64 go build -o nome-do-app-linux
                         '''
@@ -36,7 +34,6 @@ pipeline {
             when {
                 anyOf {
                     branch 'develop'
-                    branch 'feature/*'
                 }
             }
             steps {
