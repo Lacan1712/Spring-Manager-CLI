@@ -8,7 +8,7 @@ O **smc** tem como objetivo simplificar o processo de configuração e inicializ
 
 ## Instalação
 
-1. **Baixe o binário**: Acesse a seção de [Releases](https://github.com/seu_usuario/seu_repositorio/releases) do repositório e baixe o binário correspondente à sua versão do sistema operacional.
+1. **Baixe o binário**: Acesse a seção de [Releases](https://github.com/Lacan1712/Spring-Manager-CLI/releases) do repositório e baixe o binário correspondente à sua versão do sistema operacional.
 
 2. **Adicione ao PATH**: Coloque o binário em um diretório que esteja no seu `PATH`, para que você possa executá-lo de qualquer lugar no terminal.
 
@@ -44,7 +44,7 @@ O projeto será configurado com as dependências e arquivos básicos necessário
 
 #### 2. `init --custom`
 
-O comando `init -costum` é utilizado para inicializar um novo projeto mas com parâmetros personalizados.
+O comando `init -custom` é utilizado para inicializar um novo projeto mas com parâmetros personalizados.
 
 *Uso:*
 
