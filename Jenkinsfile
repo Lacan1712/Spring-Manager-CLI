@@ -1,5 +1,5 @@
 pipeline {
-    agent getAgentForBranch(env.BRANCH_NAME)
+    agent {label getAgentForBranch(env.BRANCH_NAME)}
     environment {
         PATH = "${env.PATH}:/usr/local/go/bin"
     }
