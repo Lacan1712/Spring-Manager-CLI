@@ -1,57 +1,27 @@
 pipeline {
-    agent { label 'localhost' }
+    agent none
     environment {
         PATH = "${env.PATH}:/usr/local/go/bin"
     }
-    stages { 
+    stages {
+        stage('Preparation') {
+            agent { label getAgentForBranch(env.BRANCH_NAME) }
+            steps {
+                echo "Preparing for build on branch: ${env.BRANCH_NAME}"
+            }
+        }
         stage('Clone') {
-            when {
-                anyOf {
-                    branch 'develop'
-                }
-            }
-            steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/develop']],
-                    userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
-                ])
-            }
-        }
-        stage('Build for Linux') {
-            when {
-                anyOf {
-                    branch 'develop'
-                }
-            }
+            agent { label getAgentForBranch(env.BRANCH_NAME) }
             steps {
                 script {
-                    // Use o diretório do workspace do Jenkins
-                    dir("${env.WORKSPACE}") {  
-                        sh '''
-                        go version
-                        GOOS=linux GOARCH=amd64 go build -o smc
-                        zip -r smc-linux-amd64 smc
-                        '''
-                    }
+                    clone(env.BRANCH_NAME)
                 }
             }
         }
-        stage('Build for Windows') {
-            when {
-                anyOf {
-                    branch 'develop'
-                }
-            }
+        stage('Build') {
             steps {
                 script {
-                    // Use o diretório do workspace do Jenkins
-                    dir("${env.WORKSPACE}") {  
-                        sh '''
-                        go version
-                        GOOS=windows GOARCH=amd64 go build -o smc.exe
-                        zip -r smc-win-amd64 smc.exe
-                        '''
-                    }
+                    runBuildForBranch(env.BRANCH_NAME)
                 }
             }
         }
@@ -62,6 +32,89 @@ pipeline {
         }
         failure {
             echo "Build failed. Please check the logs."
+        }
+    }
+}
+
+def getAgentForBranch(branch) {
+    switch (branch) {
+        case 'main':
+            return 'localhost-main'
+        case 'develop':
+            return 'localhost'
+        case { it.startsWith('feature/') }:
+            return 'agent-feature'
+        default:
+            return 'agent-default'
+    }
+}
+
+def clone(branch) {
+    checkout([$class: 'GitSCM', 
+        branches: [[name: '*/' + branch]],
+        userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
+    ])
+}
+
+// Função para executar o build baseado na branch
+def runBuildForBranch(branch) {
+    switch (branch) {
+        case 'main':
+            buildMainBranch()
+            break
+        case 'develop':
+            buildDevelopBranch()
+            break
+        case { it.startsWith('feature/') }:
+            buildFeatureBranch(branch)
+            break
+        default:
+            echo "Branch não reconhecida: ${branch}"
+            currentBuild.result = 'ABORTED'
+            return
+    }
+}
+
+// Função para o build da branch main
+def buildMainBranch() {
+    echo 'Building the main branch...'
+    script {
+        dir("${env.WORKSPACE}") {  
+            sh '''
+            go version
+            GOOS=linux GOARCH=amd64 go build -o smc
+            zip -r smc-linux-amd64 smc
+            '''
+        }
+    }
+}
+
+// Função para o build da branch develop
+def buildDevelopBranch() {
+    echo 'Building the develop branch...'
+    script {
+        dir("${env.WORKSPACE}") {  
+            sh '''
+            go version
+            GOOS=linux GOARCH=amd64 go build -o smc
+            zip -r smc-linux-amd64 smc
+            GOOS=windows GOARCH=amd64 go build -o smc.exe
+            zip -r smc-win-amd64 smc.exe
+            '''
+        }
+    }
+}
+
+// Função para o build de branches de feature
+def buildFeatureBranch(branch) {
+    echo "Building feature branch: ${branch}"
+    script {
+        dir("${env.WORKSPACE}") {  
+            sh '''
+            go version
+            GOOS=linux GOARCH=amd64 go build -o smc-feature
+            zip -r smc-feature-linux-amd64 smc-feature
+            '''
         }
     }
 }
