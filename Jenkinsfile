@@ -1,10 +1,24 @@
 pipeline {
-    label getAgentLabel() 
+    agent none // Define que não haverá um agent padrão
     environment {
         PATH = "${env.PATH}:/usr/local/go/bin"
     }
     stages {
+        stage('Determine Agent') {
+            agent {
+                // Define o agent dinamicamente com base na branch
+                label getAgentLabel()
+            }
+            steps {
+                script {
+                    echo "Agent selected for branch: ${env.BRANCH_NAME}"
+                }
+            }
+        }
         stage('Clone') {
+            agent {
+                label getAgentLabel() // Chama a função para obter o label do agent
+            }
             steps {
                 checkout([$class: 'GitSCM', 
                     branches: [[name: "${env.BRANCH_NAME}"]],
@@ -12,39 +26,14 @@ pipeline {
                 ])
             }
         }
-        stage('Build for Linux') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'feature/*' // Adicione outras branches conforme necessário
-                }
+        stage('Build') {
+            agent {
+                label getAgentLabel() // Chama a função para obter o label do agent
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}") {
-                        sh '''
-                        go version  # Verifica se o Go está disponível
-                        GOOS=linux GOARCH=amd64 go build -o nome-do-app-linux
-                        '''
-                    }
-                }
-            }
-        }
-        stage('Build for Windows') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'release/*' // Adicione outras branches conforme necessário
-                }
-            }
-            steps {
-                script {
-                    dir("${env.WORKSPACE}") {
-                        sh '''
-                        go version  # Verifica se o Go está disponível
-                        GOOS=windows GOARCH=amd64 go build -o nome-do-app-windows.exe
-                        '''
-                    }
+                    // Comandos de build aqui
+                    echo "Building for branch: ${env.BRANCH_NAME}"
                 }
             }
         }
@@ -59,10 +48,11 @@ pipeline {
     }
 }
 
+// Função para determinar o label do agent com base na branch
 def getAgentLabel() {
     switch (env.BRANCH_NAME) {
         case 'develop':
-            return 'localhost' // Define o label para a branch develop
+            return 'develop-agent' // Define o label para a branch develop
         case { it.startsWith('feature/') }:
             return 'feature-agent' // Define o label para branches de feature
         case { it.startsWith('release/') }:
