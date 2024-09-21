@@ -50,7 +50,7 @@ pipeline {
 def getAgentLabel() {
     switch (env.BRANCH_NAME) {
         case 'develop':
-            return 'develop-agent' // Define o label para a branch develop
+            return 'localhost' // Define o label para a branch develop
         case { it.startsWith('feature/') }:
             return 'feature-agent' // Define o label para branches de feature
         case { it.startsWith('release/') }:
