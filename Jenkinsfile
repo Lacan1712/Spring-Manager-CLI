@@ -9,7 +9,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/${env.BRANCH_NAME}']], // Clona a branch que está sendo utilizada
+                    branches: [[name: '*/develop']],  // Use explicitamente a branch 'develop'
                     userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
                 ])
             }
@@ -19,8 +19,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        // Executa o script de build para Linux e Windows
-                        sh 'sh scripts/builds/build_develop.sh'
+                        sh 'sh scripts/builds/build_develop.sh'  // Executa o script de build
                     }
                 }
             }
@@ -30,7 +29,6 @@ pipeline {
     post {
         success {
             echo "Build completed successfully."
-            archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
         }
         failure {
             echo "Build failed. Please check the logs."
