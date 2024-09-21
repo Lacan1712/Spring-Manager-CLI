@@ -28,8 +28,9 @@ pipeline {
                     // Use o diretório do workspace do Jenkins
                     dir("${env.WORKSPACE}") {  
                         sh '''
-                        go version  # Verifica se o Go está disponível
-                        GOOS=linux GOARCH=amd64 go build -o nome-do-app-linux
+                        go version
+                        GOOS=linux GOARCH=amd64 go build -o smc
+                        zip -r smc-linux-amd64 smc
                         '''
                     }
                 }
@@ -46,8 +47,9 @@ pipeline {
                     // Use o diretório do workspace do Jenkins
                     dir("${env.WORKSPACE}") {  
                         sh '''
-                        go version  # Verifica se o Go está disponível
-                        GOOS=windows GOARCH=amd64 go build -o nome-do-app-windows.exe
+                        go version
+                        GOOS=windows GOARCH=amd64 go build -o smc.exe
+                        zip -r smc-win-amd64 smc.exe
                         '''
                     }
                 }
