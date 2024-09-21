@@ -56,35 +56,18 @@ def clone(branch) {
     ])
 }
 
-// Função para executar o build baseado na branch
-def runBuildForBranch(branch) {
-    switch (branch) {
-        case 'main':
-            buildMainBranch()
-            break
-        case 'develop':
-            buildDevelopBranch()
-            break
-        case { it.startsWith('feature/') }:
-            buildFeatureBranch(branch)
-            break
-        default:
-            echo "Branch não reconhecida: ${branch}"
-            currentBuild.result = 'ABORTED'
-            return
-    }
-}
-
 // Função para o build da branch main
 def buildMainBranch() {
     echo 'Building the main branch...'
-    script {
-        dir("${env.WORKSPACE}") {  
-            sh '''
-            go version
-            GOOS=linux GOARCH=amd64 go build -o smc
-            zip -r smc-linux-amd64 smc
-            '''
+    node {
+        script {
+            dir("${env.WORKSPACE}") {  
+                sh '''
+                go version
+                GOOS=linux GOARCH=amd64 go build -o smc
+                zip -r smc-linux-amd64 smc
+                '''
+            }
         }
     }
 }
@@ -92,15 +75,17 @@ def buildMainBranch() {
 // Função para o build da branch develop
 def buildDevelopBranch() {
     echo 'Building the develop branch...'
-    script {
-        dir("${env.WORKSPACE}") {  
-            sh '''
-            go version
-            GOOS=linux GOARCH=amd64 go build -o smc
-            zip -r smc-linux-amd64 smc
-            GOOS=windows GOARCH=amd64 go build -o smc.exe
-            zip -r smc-win-amd64 smc.exe
-            '''
+    node {
+        script {
+            dir("${env.WORKSPACE}") {  
+                sh '''
+                go version
+                GOOS=linux GOARCH=amd64 go build -o smc
+                zip -r smc-linux-amd64 smc
+                GOOS=windows GOARCH=amd64 go build -o smc.exe
+                zip -r smc-win-amd64 smc.exe
+                '''
+            }
         }
     }
 }
@@ -108,13 +93,15 @@ def buildDevelopBranch() {
 // Função para o build de branches de feature
 def buildFeatureBranch(branch) {
     echo "Building feature branch: ${branch}"
-    script {
-        dir("${env.WORKSPACE}") {  
-            sh '''
-            go version
-            GOOS=linux GOARCH=amd64 go build -o smc-feature
-            zip -r smc-feature-linux-amd64 smc-feature
-            '''
+    node {
+        script {
+            dir("${env.WORKSPACE}") {  
+                sh '''
+                go version
+                GOOS=linux GOARCH=amd64 go build -o smc-feature
+                zip -r smc-feature-linux-amd64 smc-feature
+                '''
+            }
         }
     }
 }
