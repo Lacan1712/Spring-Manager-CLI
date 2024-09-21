@@ -18,9 +18,6 @@ pipeline {
             }
         }
         stage('Build for Linux') {
-           agent {
-                label getAgentLabel()
-            }
             when {
                 anyOf {
                     branch 'develop'
@@ -38,6 +35,24 @@ pipeline {
                 }
             }
         }
+        stage('Build for Windows') {
+            when {
+                anyOf {
+                    branch 'develop'
+                }
+            }
+            steps {
+                script {
+                    // Use o diretório do workspace do Jenkins
+                    dir("${env.WORKSPACE}") {  
+                        sh '''
+                        go version  # Verifica se o Go está disponível
+                        GOOS=windows GOARCH=amd64 go build -o nome-do-app-windows.exe
+                        '''
+                    }
+                }
+            }
+        }
     }
     post {
         success {
@@ -46,17 +61,5 @@ pipeline {
         failure {
             echo "Build failed. Please check the logs."
         }
-    }
-}
-def getAgentLabel() {
-    switch (env.BRANCH_NAME) {
-        case 'develop':
-            return 'localhost' // Define o label para a branch develop
-        case { it.startsWith('feature/') }:
-            return 'feature-agent' // Define o label para branches de feature
-        case { it.startsWith('release/') }:
-            return 'release-agent' // Define o label para branches de release
-        default:
-            return 'default-agent' // Define um label padrão para outras branches
     }
 }
