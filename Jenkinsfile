@@ -1,62 +1,36 @@
 pipeline {
     agent { label 'localhost' }
+
     environment {
         PATH = "${env.PATH}:/usr/local/go/bin"
     }
-    stages { 
-        stage('Clone') {
-            when {
-                anyOf {
-                    branch 'develop'
-                }
-            }
+
+    stages {
+        stage('Clone Repository') {
             steps {
                 checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/develop']],
+                    branches: [[name: '*/${env.BRANCH_NAME}']], // Clona a branch que está sendo utilizada
                     userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
                 ])
             }
         }
-        stage('Build for Linux') {
-            when {
-                anyOf {
-                    branch 'develop'
-                }
-            }
+
+        stage('Build for Linux and Windows') {
             steps {
                 script {
-                    // Use o diretório do workspace do Jenkins
-                    dir("${env.WORKSPACE}") {  
-                        sh '''
-                        go version  # Verifica se o Go está disponível
-                        GOOS=linux GOARCH=amd64 go build -o nome-do-app-linux
-                        '''
-                    }
-                }
-            }
-        }
-        stage('Build for Windows') {
-            when {
-                anyOf {
-                    branch 'develop'
-                }
-            }
-            steps {
-                script {
-                    // Use o diretório do workspace do Jenkins
-                    dir("${env.WORKSPACE}") {  
-                        sh '''
-                        go version  # Verifica se o Go está disponível
-                        GOOS=windows GOARCH=amd64 go build -o nome-do-app-windows.exe
-                        '''
+                    dir("${env.WORKSPACE}") {
+                        // Executa o script de build para Linux e Windows
+                        sh 'sh scripts/builds/build_develop.sh'
                     }
                 }
             }
         }
     }
+
     post {
         success {
-            echo "Builds completed successfully."
+            echo "Build completed successfully."
+            archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
         }
         failure {
             echo "Build failed. Please check the logs."
