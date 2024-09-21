@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent getAgentForBranch(env.BRANCH_NAME)
     environment {
         PATH = "${env.PATH}:/usr/local/go/bin"
     }
@@ -79,8 +79,7 @@ def runBuildForBranch(branch) {
 // Função para o build da branch main
 def buildMainBranch() {
     echo 'Building the main branch...'
-    // Adicione etapas específicas para a branch main
-    node {
+ 
         script {
             dir("${env.WORKSPACE}") {  
                 sh '''
@@ -90,14 +89,11 @@ def buildMainBranch() {
                 '''
             }
         }
-    }
 }
 
 // Função para o build da branch develop
 def buildDevelopBranch() {
     echo 'Building the develop branch...'
-    // Adicione etapas específicas para a branch develop
-    node {
         script {
             dir("${env.WORKSPACE}") {  
                 sh '''
@@ -109,14 +105,11 @@ def buildDevelopBranch() {
                 '''
             }
         }
-    }
 }
 
 // Função para o build de branches de feature
 def buildFeatureBranch(branch) {
     echo "Building feature branch: ${branch}"
-    // Adicione etapas específicas para branches de feature
-    node {
         script {
             dir("${env.WORKSPACE}") {  
                 sh '''
@@ -126,5 +119,4 @@ def buildFeatureBranch(branch) {
                 '''
             }
         }
-    }
 }
