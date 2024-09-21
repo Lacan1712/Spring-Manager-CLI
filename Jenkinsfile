@@ -21,6 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Executa o build baseado na branch
                     runBuildForBranch(env.BRANCH_NAME)
                 }
             }
@@ -56,9 +57,29 @@ def clone(branch) {
     ])
 }
 
+// Função para executar o build baseado na branch
+def runBuildForBranch(branch) {
+    switch (branch) {
+        case 'main':
+            buildMainBranch()
+            break
+        case 'develop':
+            buildDevelopBranch()
+            break
+        case { it.startsWith('feature/') }:
+            buildFeatureBranch(branch)
+            break
+        default:
+            echo "Branch não reconhecida: ${branch}"
+            currentBuild.result = 'ABORTED'
+            return
+    }
+}
+
 // Função para o build da branch main
 def buildMainBranch() {
     echo 'Building the main branch...'
+    // Adicione etapas específicas para a branch main
     node {
         script {
             dir("${env.WORKSPACE}") {  
@@ -75,6 +96,7 @@ def buildMainBranch() {
 // Função para o build da branch develop
 def buildDevelopBranch() {
     echo 'Building the develop branch...'
+    // Adicione etapas específicas para a branch develop
     node {
         script {
             dir("${env.WORKSPACE}") {  
@@ -93,6 +115,7 @@ def buildDevelopBranch() {
 // Função para o build de branches de feature
 def buildFeatureBranch(branch) {
     echo "Building feature branch: ${branch}"
+    // Adicione etapas específicas para branches de feature
     node {
         script {
             dir("${env.WORKSPACE}") {  
