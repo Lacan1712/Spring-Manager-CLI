@@ -1,9 +1,9 @@
 package createcommands;
 
 import(
-	"fmt"
+	"SMC/src/providers/archive"
 )
 
 func CreateController(name string){
-	fmt.Printf("Criando Controller %s",name)
+	archive.CarregarController(name)
 }
