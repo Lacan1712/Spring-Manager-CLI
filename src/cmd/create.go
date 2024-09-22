@@ -34,5 +34,5 @@ func init() {
 	createCmd.Flags().StringVarP(&controllerName, "controller", "l", "", "Cria um controlador com o nome especificado")
 	createCmd.Flags().StringVarP(&serviceName, "service", "s", "", "Cria um serviço com o nome especificado")
 
-	RootCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(createCmd)
 }
