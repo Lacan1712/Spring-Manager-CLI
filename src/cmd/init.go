@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	createProject "SMC/src/providers/downloadSpring"
-	ascii_apresentation "SMC/src/ascii_texts"
+	createProject "smc/src/providers/downloadSpring"
+	ascii_apresentation "smc/src/ascii_texts"
 	"fmt"
 
 	"github.com/spf13/cobra"

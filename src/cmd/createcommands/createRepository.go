@@ -1,9 +1,9 @@
 package createcommands;
 
 import(
-	"fmt"
+	"smc/src/providers/archive"
 )
 
 func CreateRepository(name string){
-	fmt.Println("Criando repository %s\n",name)
+	archive.CarregarRepository(name)
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"SMC/src/cmd"
+	"smc/src/cmd"
 )
 
 func main() {
