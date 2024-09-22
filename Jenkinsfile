@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        sh 'sh scripts/builds/build_develop.sh'  // Executa o script de build
+                        sh 'sh /scripts/Spring CLI/build_develop.sh'  // Executa o script de build
                     }
                 }
             }
