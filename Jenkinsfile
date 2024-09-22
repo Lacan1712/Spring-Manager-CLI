@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        sh '/home/rodrigo/Jenkins_agent/workspace/scripts/SpringCLI/build_develop.sh'  // Executa o script de build
+                        sh 'scripts/SpringCLI/build_develop.sh'  // Executa o script de build
                     }
                 }
             }
