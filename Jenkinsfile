@@ -6,6 +6,12 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() // Limpa o workspace
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 checkout([$class: 'GitSCM', 
