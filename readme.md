@@ -10,7 +10,7 @@ O **smc** tem como objetivo simplificar o processo de configuração e inicializ
 
 1. **Baixe o binário**: Acesse a seção de [Releases](https://github.com/Lacan1712/Spring-Manager-CLI/releases) do repositório e baixe o binário correspondente à sua versão do sistema operacional.
 
-2. **Adicione ao PATH**: Coloque o binário em um diretório que esteja no seu `PATH`, para que você possa executá-lo de qualquer lugar no terminal.
+2. **Adicione ao PATH**: Coloque o binário e pasta 'src' em um diretório que esteja no seu `PATH`, para que você possa executá-lo de qualquer lugar no terminal.
 
 ## Uso
 
