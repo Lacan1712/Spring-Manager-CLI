@@ -1,19 +1,43 @@
 pipeline {
-    agent any
+    agent { label 'localhost' }
+
+    environment {
+        PATH = "${env.PATH}:/usr/local/go/bin"
+    }
+
     stages {
-        stage('Build') {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() // Limpa o workspace
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: '*/develop']],
+                    userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
+                ])
+            }
+        }
+
+        stage('Build for Linux and Windows') {
             steps {
                 script {
-                    def branches = ['main', 'develop', 'feature/*']
-
-                    // Verifique se a branch atual está na lista
-                    if (branches.any { it == env.BRANCH_NAME || it.endsWith("/*") && env.BRANCH_NAME.startsWith(it.substring(0, it.length() - 2)) }) {
-                        echo "Executando script na branch: ${env.BRANCH_NAME}"
-                    } else {
-                        echo "Branch ${env.BRANCH_NAME} não está na lista, pulando."
+                    dir("${env.WORKSPACE}") {
+                        sh '../scripts/SpringCLI/build_develop.sh'  // Executa o script de build
                     }
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Build completed successfully."
+        }
+        failure {
+            echo "Build failed. Please check the logs."
         }
     }
 }

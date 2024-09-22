@@ -1,8 +1,8 @@
 package providers
 
 import (
-	"SMC/src/providers/zip"
-	"SMC/src/services/api"
+	"smc/src/providers/zip"
+	"smc/src/services/api"
 	"fmt"
 	"io"
 	"log"
