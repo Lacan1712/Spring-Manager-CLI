@@ -71,5 +71,5 @@ var initCmd = &cobra.Command{
 
 func init() {
 	initCmd.Flags().BoolP("custom", "c", false, "Ativa o comportamento personalizado")
-	RootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(initCmd)
 }
