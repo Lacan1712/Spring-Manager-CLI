@@ -1,4 +1,4 @@
-module SMC
+module smc
 
 go 1.23.1
 
