@@ -1,7 +1,7 @@
 package createcommands;
 
 import(
-	"SMC/src/providers/archive"
+	"smc/src/providers/archive"
 )
 
 func CreateController(name string){

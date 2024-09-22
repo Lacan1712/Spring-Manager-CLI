@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"SMC/src/cmd/createcommands" // Ajuste para o caminho correto
+	"smc/src/cmd/createcommands" // Ajuste para o caminho correto
 )
 
 var (
