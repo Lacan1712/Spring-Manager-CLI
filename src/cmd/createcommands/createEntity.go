@@ -1,9 +1,9 @@
 package createcommands;
 
 import(
-	"fmt"
+	"smc/src/providers/archive"
 )
 
 func CreateService(name string){
-	fmt.Println("Criando Service: %s\n",name)
+	archive.CarregarEntity(name)
 }
