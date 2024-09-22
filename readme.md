@@ -28,7 +28,7 @@ smc --command
 
 O comando `init` é utilizado para inicializar um novo projeto Spring Boot com as configurações padrão.
 
-*Uso:*
+Uso:
 
 smc init
 
@@ -55,8 +55,8 @@ Descrição:
 
 Este comando cria uma nova estrutura de projeto Spring Boot em um diretório específico.
 O projeto será configurado com as dependências e arquivos básicos necessários para iniciar o desenvolvimento mas com parâmetros personalizados.
-
-
+```
+```bash
 ### Comandos Disponíveis
 
 #### 3. `create`
@@ -70,9 +70,9 @@ smc create --entity <NomeDaEntidade>
 *Descrição:*
 
 Este comando cria uma nova entidade no projeto Spring Boot, gerando a classe correspondente na estrutura de pacotes definida.
-
+```
 ---
-
+```bash
 #### 4. `create --repository`
 
 O comando `create --repository` é utilizado para criar um repositório associado a uma entidade.
@@ -84,9 +84,9 @@ smc create --repository <NomeDaEntidade>
 *Descrição:*
 
 Este comando cria um novo repositório para a entidade especificada, permitindo a realização de operações de persistência no banco de dados.
-
+```
 ---
-
+```bash
 #### 5. `create --controller`
 
 O comando `create --controller` é utilizado para criar um controlador associado a uma entidade.
@@ -98,5 +98,4 @@ smc create --controller <NomeDaEntidade>
 *Descrição:*
 
 Este comando cria um novo controlador para a entidade especificada, permitindo a manipulação de requisições e respostas HTTP no projeto.
-
 ```
