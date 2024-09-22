@@ -55,4 +55,48 @@ Descrição:
 
 Este comando cria uma nova estrutura de projeto Spring Boot em um diretório específico.
 O projeto será configurado com as dependências e arquivos básicos necessários para iniciar o desenvolvimento mas com parâmetros personalizados.
+
+
+### Comandos Disponíveis
+
+#### 3. `create`
+
+O comando `create` é utilizado para criar novos componentes dentro de um projeto Spring Boot, e em cada de componente pode ser passado um diretório path no padrão 'meu/caminho/component'.
+
+*Uso:*
+
+smc create --entity <NomeDaEntidade>
+
+*Descrição:*
+
+Este comando cria uma nova entidade no projeto Spring Boot, gerando a classe correspondente na estrutura de pacotes definida.
+
+---
+
+#### 4. `create --repository`
+
+O comando `create --repository` é utilizado para criar um repositório associado a uma entidade.
+
+*Uso:*
+
+smc create --repository <NomeDaEntidade>
+
+*Descrição:*
+
+Este comando cria um novo repositório para a entidade especificada, permitindo a realização de operações de persistência no banco de dados.
+
+---
+
+#### 5. `create --controller`
+
+O comando `create --controller` é utilizado para criar um controlador associado a uma entidade.
+
+*Uso:*
+
+smc create --controller <NomeDaEntidade>
+
+*Descrição:*
+
+Este comando cria um novo controlador para a entidade especificada, permitindo a manipulação de requisições e respostas HTTP no projeto.
+
 ```
