@@ -9,7 +9,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/develop']],  // Use explicitamente a branch 'develop'
+                    branches: [[name: '*/develop']],
                     userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
                 ])
             }
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        sh 'sh "scripts/Spring CLI/build_develop.sh"'  // Executa o script de build
+                        sh '/home/rodrigo/Jenkins_agent/workspace/scripts/Spring CLI/build_develop.sh'  // Executa o script de build
                     }
                 }
             }
