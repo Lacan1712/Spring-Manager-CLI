@@ -16,7 +16,7 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', 
                     branches: [[name: '*/develop']],
-                    userRemoteConfigs: [[url: 'git@github.com:Lacan1712/Spring-Manager-CLI.git']]
+                    userRemoteConfigs: [[url: 'https://github.com/Lacan1712/Spring-Manager-CLI.git']]
                 ])
             }
         }
