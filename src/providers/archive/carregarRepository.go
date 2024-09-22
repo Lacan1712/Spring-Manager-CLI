@@ -11,7 +11,7 @@ import (
 
 type Repository struct {
     PackageName string
-    ClassName   string
+    RepositoryName   string
 }
 
 func CarregarRepository(repositoryPath string) {
@@ -25,7 +25,7 @@ func CarregarRepository(repositoryPath string) {
     templatePath := filepath.Join(exeDir,"src", "templates", "Repository", "Repository.tpl")
 
     // Se o usuário forneceu apenas o nome do repository (sem caminho)
-    if !strings.Contains(RepositoryPath, "/") && !strings.Contains(repositoryPath, "\\") {
+    if !strings.Contains(repositoryPath, "/") && !strings.Contains(repositoryPath, "\\") {
         repositoryPath = "./" + repositoryPath // Usar diretório local
     }
 
@@ -33,7 +33,7 @@ func CarregarRepository(repositoryPath string) {
     dir, file := filepath.Split(repositoryPath)
 
     // Separa o nome do arquivo e remove a extensão, se houver
-    className := strings.TrimSuffix(file, filepath.Ext(file))
+    repositoryName := strings.TrimSuffix(file, filepath.Ext(file))
 
     // Converte o caminho do diretório para um formato de pacote
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
@@ -58,13 +58,13 @@ func CarregarRepository(repositoryPath string) {
     }
 
     // Prepara os dados para o template
-    data := repository{
+    data := Repository{
         PackageName: packageName,
-        ClassName:   className,
+        RepositoryName:   repositoryName,
     }
 
     // Cria o arquivo de saída no diretório especificado
-    outputFilePath := filepath.Join(dir, className+".java")
+    outputFilePath := filepath.Join(dir, repositoryName+".java")
     outputFile, err := os.Create(outputFilePath)
     if err != nil {
         log.Fatalf("Erro ao criar o arquivo de saída: %v", err)
@@ -77,5 +77,5 @@ func CarregarRepository(repositoryPath string) {
         log.Fatalf("Erro ao executar o template: %v", err)
     }
 
-    fmt.Printf("repository %s criado com sucesso em %s\n", className, outputFilePath)
+    fmt.Printf("repository %s criado com sucesso em %s\n", repositoryName, outputFilePath)
 }
