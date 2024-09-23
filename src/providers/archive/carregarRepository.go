@@ -22,7 +22,7 @@ func CarregarRepository(repositoryPath string) {
 	}
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "Repository", "Repository.tpl")
+    templatePath := filepath.Join(exeDir,"src", "templates", "repository", "Repository.tpl")
 
     // Se o usuário forneceu apenas o nome do repository (sem caminho)
     if !strings.Contains(repositoryPath, "/") && !strings.Contains(repositoryPath, "\\") {

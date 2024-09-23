@@ -22,7 +22,7 @@ func CarregarController(controllerPath string) {
 	}
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "Controllers", "Controller.tpl")
+    templatePath := filepath.Join(exeDir,"src", "templates", "controllers", "Controller.tpl")
 
     // Se o usuário forneceu apenas o nome do controller (sem caminho)
     if !strings.Contains(controllerPath, "/") && !strings.Contains(controllerPath, "\\") {

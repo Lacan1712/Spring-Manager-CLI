@@ -22,7 +22,7 @@ func CarregarEntity(entityPath string) {
 	}
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "Entity", "Entity.tpl")
+    templatePath := filepath.Join(exeDir,"src", "templates", "entity", "Entity.tpl")
 
     // Se o usuário forneceu apenas o nome do repository (sem caminho)
     if !strings.Contains(entityPath, "/") && !strings.Contains(entityPath, "\\") {
