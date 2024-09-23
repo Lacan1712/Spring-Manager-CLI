@@ -35,6 +35,11 @@ func CarregarRepository(repositoryPath string) {
     // Separa o nome do arquivo e remove a extensão, se houver
     repositoryName := strings.TrimSuffix(file, filepath.Ext(file))
 
+    // Nome padrão caso não seja especificado
+    if (repositoryName == ""){
+        repositoryName = "Repository"
+    }
+
     // Converte o caminho do diretório para um formato de pacote
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
 
