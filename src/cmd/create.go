@@ -22,7 +22,7 @@ var createCmd = &cobra.Command{
 		case controllerName != "":
 			createcommands.CreateController(controllerName) // Chama a função de criar controlador
 		case entityName != "":
-			createcommands.CreateService(entityName) // Chama a função de criar serviço
+			createcommands.CreateEntity(entityName) // Chama a função de criar serviço
 		default:
 			fmt.Println("Por favor, forneça um nome para repository, controller ou service.")
 		}

@@ -15,22 +15,22 @@ type Controller struct {
 }
 
 func CarregarController(controllerPath string) {
-    templatePath := setupPaths()
+    templatePath := setupControllerPaths()
 
-    controllerPath = normalizePath(controllerPath)
+    controllerPath = normalizeControllerPath(controllerPath)
 
-    dir, controllerName := extractDirectoryAndCon trollerName(controllerPath)
+    dir, controllerName := extractDirectoryAndControllerName(controllerPath)
 
-    packageName := convertDirToPackageName(dir)
+    packageName := convertDirToPackageNameController(dir)
 
-    createDirectoryIfNotExists(dir)
+    createDirectoryIfNotExistsController(dir)
 
-    tmpl := loadTemplate(templatePath)
+    tmpl := loadTemplateController(templatePath)
 
     writeControllerFile(tmpl, dir, controllerName, packageName)
 }
 
-func setupPaths() string {
+func setupControllerPaths() string {
     exePath, err := os.Executable()
     if err != nil {
         log.Fatalf("Erro ao obter o caminho do executável: %v", err)
@@ -41,7 +41,7 @@ func setupPaths() string {
     return templatePath
 }
 
-func normalizePath(controllerPath string) string {
+func normalizeControllerPath(controllerPath string) string {
     if !filepath.IsAbs(controllerPath) {
         controllerPath = filepath.Join(".", controllerPath) // Usar diretório local
     }
@@ -60,18 +60,18 @@ func extractDirectoryAndControllerName(controllerPath string) (string, string) {
     return dir, controllerName
 }
 
-func convertDirToPackageName(dir string) string {
+func convertDirToPackageNameController(dir string) string {
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
     return strings.Trim(strings.ToLower(packageName), ".")
 }
 
-func createDirectoryIfNotExists(dir string) {
+func createDirectoryIfNotExistsController(dir string) {
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
 }
 
-func loadTemplate(templatePath string) *template.Template {
+func loadTemplateController(templatePath string) *template.Template {
     tmpl, err := template.ParseFiles(templatePath)
     if err != nil {
         log.Fatalf("Erro ao carregar o template: %v", err)
