@@ -19,7 +19,7 @@ func CarregarController(controllerPath string) {
 
     controllerPath = normalizePath(controllerPath)
 
-    dir, controllerName := extractDirectoryAndCon trollerName(controllerPath)
+    dir, controllerName := extractDirectoryAndControllerName(controllerPath)
 
     packageName := convertDirToPackageName(dir)
 
