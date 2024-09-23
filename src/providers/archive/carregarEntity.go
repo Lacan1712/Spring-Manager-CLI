@@ -35,6 +35,11 @@ func CarregarEntity(entityPath string) {
     // Separa o nome do arquivo e remove a extensão, se houver
     entityName := strings.TrimSuffix(file, filepath.Ext(file))
 
+	// Nome padrão caso não seja especificado
+	if (entityName == ""){
+		entityName = "Entity"
+	}
+
     // Converte o caminho do diretório para um formato de pacote
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
 

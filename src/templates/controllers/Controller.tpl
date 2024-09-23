@@ -3,12 +3,12 @@ package {{.PackageName}}
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/{{.ClassName}}")
-public class {{.ClassName}} {
+@RequestMapping("/{{.ControllerName}}")
+public class {{.ControllerName}} {
 
     @GetMapping
     public String getAll() {
-        return "Hello from {{.ClassName}}";
+        return "Hello from {{.ControllerName}}";
     }
 
     @PostMapping
