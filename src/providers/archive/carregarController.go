@@ -2,73 +2,84 @@ package archive
 
 import (
     "fmt"
+    "log"
     "os"
     "path/filepath"
     "strings"
     "text/template"
-    "log"
 )
 
 type Controller struct {
-    PackageName string
-    ControllerName   string
+    PackageName    string
+    ControllerName string
 }
 
 func CarregarController(controllerPath string) {
-    //Caminho do executável go
+    templatePath := setupControllerPaths()
+
+    controllerPath = normalizeControllerPath(controllerPath)
+
+    dir, controllerName := extractDirectoryAndControllerName(controllerPath)
+
+    packageName := convertDirToPackageNameController(dir)
+
+    createDirectoryIfNotExistsController(dir)
+
+    tmpl := loadTemplateController(templatePath)
+
+    writeControllerFile(tmpl, dir, controllerName, packageName)
+}
+
+func setupControllerPaths() string {
     exePath, err := os.Executable()
-	if err != nil {
-		log.Fatalf("Erro ao obter o caminho do executável: %v", err)
-	}
+    if err != nil {
+        log.Fatalf("Erro ao obter o caminho do executável: %v", err)
+    }
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "controllers", "Controller.tpl")
+    templatePath := filepath.Join(exeDir, "src", "templates", "controllers", "Controller.tpl")
+    return templatePath
+}
 
-    // Se o usuário forneceu apenas o nome do controller (sem caminho)
-    if !strings.Contains(controllerPath, "/") && !strings.Contains(controllerPath, "\\") {
-        controllerPath = "./" + controllerPath // Usar diretório local
+func normalizeControllerPath(controllerPath string) string {
+    if !filepath.IsAbs(controllerPath) {
+        controllerPath = filepath.Join(".", controllerPath) // Usar diretório local
     }
+    return strings.ReplaceAll(controllerPath, ".", "/")
+}
 
-    // Divide o caminho em diretório e nome do controller
-    dir, file := filepath.Split(controllerPath)
+func extractDirectoryAndControllerName(controllerPath string) (string, string) {
+    parts := strings.Split(controllerPath, "/")
+    file := parts[len(parts)-1] // O último item é o nome do arquivo
+    dir := filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
 
-    // Separa o nome do arquivo e remove a extensão, se houver
     controllerName := strings.TrimSuffix(file, filepath.Ext(file))
-
-    // Nome padrão caso não seja especificado
-    if (controllerName == ""){
-        controllerName = "Controller"
+    if controllerName == "" {
+        controllerName = "Controller" // Nome padrão caso não seja especificado
     }
+    return dir, controllerName
+}
 
-    // Converte o caminho do diretório para um formato de pacote
+func convertDirToPackageNameController(dir string) string {
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
+    return strings.Trim(strings.ToLower(packageName), ".")
+}
 
-    // Ajusta o nome do pacote para não conter um ponto no início ou no final
-    if strings.HasPrefix(packageName, ".") {
-        packageName = strings.ToLower(packageName[1:]) 
-    }
-    if strings.HasSuffix(packageName, ".") {
-        packageName = strings.ToLower(packageName[:len(packageName)-1])
-    }
-
-    // Cria o diretório, se não existir
+func createDirectoryIfNotExistsController(dir string) {
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
+}
 
-    // Carrega o template
+func loadTemplateController(templatePath string) *template.Template {
     tmpl, err := template.ParseFiles(templatePath)
     if err != nil {
         log.Fatalf("Erro ao carregar o template: %v", err)
     }
+    return tmpl
+}
 
-    // Prepara os dados para o template
-    data := Controller{
-        PackageName: packageName,
-        ControllerName:   controllerName,
-    }
-
-    // Cria o arquivo de saída no diretório especificado
+func writeControllerFile(tmpl *template.Template, dir, controllerName, packageName string) {
     outputFilePath := filepath.Join(dir, controllerName+".java")
     outputFile, err := os.Create(outputFilePath)
     if err != nil {
@@ -76,9 +87,12 @@ func CarregarController(controllerPath string) {
     }
     defer outputFile.Close()
 
-    // Executa o template e escreve no arquivo
-    err = tmpl.Execute(outputFile, data)
-    if err != nil {
+    data := Controller{
+        PackageName:    packageName,
+        ControllerName: controllerName,
+    }
+
+    if err := tmpl.Execute(outputFile, data); err != nil {
         log.Fatalf("Erro ao executar o template: %v", err)
     }
 

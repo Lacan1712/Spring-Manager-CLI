@@ -4,6 +4,6 @@ import(
 	"smc/src/providers/archive"
 )
 
-func CreateService(name string){
+func CreateEntity(name string){
 	archive.CarregarEntity(name)
 }

@@ -2,73 +2,84 @@ package archive
 
 import (
     "fmt"
+    "log"
     "os"
     "path/filepath"
     "strings"
     "text/template"
-    "log"
 )
 
 type Repository struct {
-    PackageName string
-    RepositoryName   string
+    PackageName    string
+    RepositoryName string
 }
 
 func CarregarRepository(repositoryPath string) {
-    //Caminho do executável go
+    templatePath := setupRepositoryPaths()
+
+    repositoryPath = normalizeRepositoryPath(repositoryPath)
+
+    dir, repositoryName := extractDirectoryAndRepositoryName(repositoryPath)
+
+    packageName := convertDirToPackageNameRepository(dir)
+
+    createDirectoryIfNotExistsRepository(dir)
+
+    tmpl := loadTemplateRepository(templatePath)
+
+    writeRepositoryFile(tmpl, dir, repositoryName, packageName)
+}
+
+func setupRepositoryPaths() string {
     exePath, err := os.Executable()
-	if err != nil {
-		log.Fatalf("Erro ao obter o caminho do executável: %v", err)
-	}
+    if err != nil {
+        log.Fatalf("Erro ao obter o caminho do executável: %v", err)
+    }
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "repository", "Repository.tpl")
+    templatePath := filepath.Join(exeDir, "src", "templates", "repository", "Repository.tpl")
+    return templatePath
+}
 
-    // Se o usuário forneceu apenas o nome do repository (sem caminho)
-    if !strings.Contains(repositoryPath, "/") && !strings.Contains(repositoryPath, "\\") {
-        repositoryPath = "./" + repositoryPath // Usar diretório local
+func normalizeRepositoryPath(repositoryPath string) string {
+    if !filepath.IsAbs(repositoryPath) {
+        repositoryPath = filepath.Join(".", repositoryPath) // Usar diretório local
     }
+    return strings.ReplaceAll(repositoryPath, ".", "/")
+}
 
-    // Divide o caminho em diretório e nome do repositoryPath
-    dir, file := filepath.Split(repositoryPath)
+func extractDirectoryAndRepositoryName(repositoryPath string) (string, string) {
+    parts := strings.Split(repositoryPath, "/")
+    file := parts[len(parts)-1] // O último item é o nome do arquivo
+    dir := filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
 
-    // Separa o nome do arquivo e remove a extensão, se houver
     repositoryName := strings.TrimSuffix(file, filepath.Ext(file))
-
-    // Nome padrão caso não seja especificado
-    if (repositoryName == ""){
-        repositoryName = "Repository"
+    if repositoryName == "" {
+        repositoryName = "Repository" // Nome padrão caso não seja especificado
     }
+    return dir, repositoryName
+}
 
-    // Converte o caminho do diretório para um formato de pacote
+func convertDirToPackageNameRepository(dir string) string {
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
+    return strings.Trim(strings.ToLower(packageName), ".")
+}
 
-    // Ajusta o nome do pacote para não conter um ponto no início ou no final
-    if strings.HasPrefix(packageName, ".") {
-        packageName = strings.ToLower(packageName[1:]) 
-    }
-    if strings.HasSuffix(packageName, ".") {
-        packageName = strings.ToLower(packageName[:len(packageName)-1])
-    }
-
-    // Cria o diretório, se não existir
+func createDirectoryIfNotExistsRepository(dir string) {
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
+}
 
-    // Carrega o template
+func loadTemplateRepository(templatePath string) *template.Template {
     tmpl, err := template.ParseFiles(templatePath)
     if err != nil {
         log.Fatalf("Erro ao carregar o template: %v", err)
     }
+    return tmpl
+}
 
-    // Prepara os dados para o template
-    data := Repository{
-        PackageName: packageName,
-        RepositoryName:   repositoryName,
-    }
-
-    // Cria o arquivo de saída no diretório especificado
+func writeRepositoryFile(tmpl *template.Template, dir, repositoryName, packageName string) {
     outputFilePath := filepath.Join(dir, repositoryName+".java")
     outputFile, err := os.Create(outputFilePath)
     if err != nil {
@@ -76,11 +87,14 @@ func CarregarRepository(repositoryPath string) {
     }
     defer outputFile.Close()
 
-    // Executa o template e escreve no arquivo
-    err = tmpl.Execute(outputFile, data)
-    if err != nil {
+    data := Repository{
+        PackageName: packageName,
+        RepositoryName:  repositoryName,
+    }
+
+    if err := tmpl.Execute(outputFile, data); err != nil {
         log.Fatalf("Erro ao executar o template: %v", err)
     }
 
-    fmt.Printf("repository %s criado com sucesso em %s\n", repositoryName, outputFilePath)
+    fmt.Printf("Repository %s criado com sucesso em %s\n", repositoryName, outputFilePath)
 }
