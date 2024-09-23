@@ -15,11 +15,11 @@ type Controller struct {
 }
 
 func CarregarController(controllerPath string) {
-    exeDir, templatePath := setupPaths()
+    templatePath := setupPaths()
 
     controllerPath = normalizePath(controllerPath)
 
-    dir, controllerName := extractDirectoryAndControllerName(controllerPath)
+    dir, controllerName := extractDirectoryAndCon trollerName(controllerPath)
 
     packageName := convertDirToPackageName(dir)
 
@@ -30,7 +30,7 @@ func CarregarController(controllerPath string) {
     writeControllerFile(tmpl, dir, controllerName, packageName)
 }
 
-func setupPaths() (string, string) {
+func setupPaths() string {
     exePath, err := os.Executable()
     if err != nil {
         log.Fatalf("Erro ao obter o caminho do executável: %v", err)
@@ -38,7 +38,7 @@ func setupPaths() (string, string) {
 
     exeDir := filepath.Dir(exePath)
     templatePath := filepath.Join(exeDir, "src", "templates", "controllers", "Controller.tpl")
-    return exeDir, templatePath
+    return templatePath
 }
 
 func normalizePath(controllerPath string) string {
