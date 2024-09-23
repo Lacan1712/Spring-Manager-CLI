@@ -22,7 +22,7 @@ func CarregarEntity(entityPath string) {
 	}
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "Entity", "Entity.tpl")
+    templatePath := filepath.Join(exeDir,"src", "templates", "entity", "Entity.tpl")
 
     // Se o usuário forneceu apenas o nome do repository (sem caminho)
     if !strings.Contains(entityPath, "/") && !strings.Contains(entityPath, "\\") {
@@ -34,6 +34,11 @@ func CarregarEntity(entityPath string) {
 
     // Separa o nome do arquivo e remove a extensão, se houver
     entityName := strings.TrimSuffix(file, filepath.Ext(file))
+
+	// Nome padrão caso não seja especificado
+	if (entityName == ""){
+		entityName = "Entity"
+	}
 
     // Converte o caminho do diretório para um formato de pacote
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")

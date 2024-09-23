@@ -11,7 +11,7 @@ import (
 
 type Controller struct {
     PackageName string
-    ClassName   string
+    ControllerName   string
 }
 
 func CarregarController(controllerPath string) {
@@ -22,7 +22,7 @@ func CarregarController(controllerPath string) {
 	}
 
     exeDir := filepath.Dir(exePath)
-    templatePath := filepath.Join(exeDir,"src", "templates", "Controllers", "Controller.tpl")
+    templatePath := filepath.Join(exeDir,"src", "templates", "controllers", "Controller.tpl")
 
     // Se o usuário forneceu apenas o nome do controller (sem caminho)
     if !strings.Contains(controllerPath, "/") && !strings.Contains(controllerPath, "\\") {
@@ -33,7 +33,12 @@ func CarregarController(controllerPath string) {
     dir, file := filepath.Split(controllerPath)
 
     // Separa o nome do arquivo e remove a extensão, se houver
-    className := strings.TrimSuffix(file, filepath.Ext(file))
+    controllerName := strings.TrimSuffix(file, filepath.Ext(file))
+
+    // Nome padrão caso não seja especificado
+    if (controllerName == ""){
+        controllerName = "Controller"
+    }
 
     // Converte o caminho do diretório para um formato de pacote
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
@@ -60,11 +65,11 @@ func CarregarController(controllerPath string) {
     // Prepara os dados para o template
     data := Controller{
         PackageName: packageName,
-        ClassName:   className,
+        ControllerName:   controllerName,
     }
 
     // Cria o arquivo de saída no diretório especificado
-    outputFilePath := filepath.Join(dir, className+".java")
+    outputFilePath := filepath.Join(dir, controllerName+".java")
     outputFile, err := os.Create(outputFilePath)
     if err != nil {
         log.Fatalf("Erro ao criar o arquivo de saída: %v", err)
@@ -77,5 +82,5 @@ func CarregarController(controllerPath string) {
         log.Fatalf("Erro ao executar o template: %v", err)
     }
 
-    fmt.Printf("Controller %s criado com sucesso em %s\n", className, outputFilePath)
+    fmt.Printf("Controller %s criado com sucesso em %s\n", controllerName, outputFilePath)
 }
