@@ -70,6 +70,6 @@ func DownloadSpringBootProject(config ProjectConfig) {
 		return
 	}
 
-	fmt.Println("Projeto Spring Boot baixado com sucesso como demo.zip!")
+	fmt.Println("Projeto Spring Boot baixado com sucesso como App!")
 
 }
