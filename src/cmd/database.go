@@ -7,6 +7,7 @@ import (
 
 var (
 	listTables bool
+	connectionName string
 )
 
 var databaseCmd = &cobra.Command{
@@ -15,13 +16,14 @@ var databaseCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 			switch {
 				case listTables:
-					databasecommands.ListTables()
+					databasecommands.ListTables(connectionName)
 			}
 	},
 }
 
 func init() {
 	databaseCmd.Flags().BoolVarP(&listTables, "listables", "",false,"lista as tabelas do banco")
+	databaseCmd.Flags().StringVarP(&connectionName, "name", "n","","nome da conexão criada")
 
 	rootCmd.AddCommand(databaseCmd)
 }
