@@ -98,3 +98,66 @@ func ListTablesDB(connectionName string) {
         db.Close()
     
 }
+
+func ListColumnsDB(connectionName, tableName string) ([]models.Column, error) {
+	var database models.Database
+
+	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading JSON: %v", err)
+	}
+
+	// Encontrar a conexão correta com base no connectionName
+	var conn *models.Connections
+	for _, connection := range database.Connections {
+		if connection.ConnectionName == connectionName {
+			conn = &connection
+			break
+		}
+	}
+
+	if conn == nil {
+		return nil, fmt.Errorf("Conexão com o nome '%s' não foi encontrada.", connectionName)
+	}
+
+	db, err := ConnectToDatabase(*conn)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to connect to %s: %v", conn.DatabaseName, err)
+	}
+	defer db.Close()
+
+	schema := "public"
+	if conn.Schema != "" {
+		schema = conn.Schema
+	}
+
+	// Query para listar as colunas da tabela especificada
+	query := fmt.Sprintf(`
+		SELECT column_name, data_type
+		FROM information_schema.columns
+		WHERE table_schema = '%s' AND table_name = '%s'`, schema, tableName)
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var columns []models.Column
+	for rows.Next() {
+		var columnName, dataType string
+		if err := rows.Scan(&columnName, &dataType); err != nil {
+			return nil, err
+		}
+		columns = append(columns, models.Column{
+			Name: columnName,
+			Type: dataType,
+		})
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return columns, nil
+}
