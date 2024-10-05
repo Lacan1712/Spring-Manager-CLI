@@ -13,7 +13,8 @@ var databaseCmd = &cobra.Command{
 	Use:   "database",
 	Short: "Recursos para manipulação de banco de dados",
 	Run: func(cmd *cobra.Command, args []string) {
-			if(listTables){
+			switch {
+				case listTables:
 				databasecommands.ListTables()
 			}
 	},
