@@ -15,7 +15,7 @@ var databaseCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 			switch {
 				case listTables:
-				databasecommands.ListTables()
+					databasecommands.ListTables()
 			}
 	},
 }
