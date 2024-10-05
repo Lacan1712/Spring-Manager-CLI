@@ -7,6 +7,7 @@ type Connections struct {
 	Port   		  string `json:"port"`
 	Username 	  string `json:"username"`
 	Password 	  string `json:"password"`
+	Schema		  string `json:"schema"`
 }
 
 type Database struct {
