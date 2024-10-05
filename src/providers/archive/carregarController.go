@@ -66,6 +66,9 @@ func convertDirToPackageNameController(dir string) string {
 }
 
 func createDirectoryIfNotExistsController(dir string) {
+    if(dir == ""){
+        dir = "controller"
+    }
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
