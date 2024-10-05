@@ -14,3 +14,8 @@ type Connections struct {
 type Database struct {
     Connections []Connections `json:"connections"`
 }
+
+type Column struct {
+	Name string
+	Type string
+}
