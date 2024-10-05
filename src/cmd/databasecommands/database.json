@@ -1,6 +1,6 @@
 {
     "connections": [
-        {
+        {   "connectionName":"myPostgres",
             "driveDatabase": "postgres",
             "databaseName": "Judic",
             "host": "localhost",
