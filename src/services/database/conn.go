@@ -161,3 +161,138 @@ func ListColumnsDB(connectionName, tableName string) ([]models.Column, error) {
 
 	return columns, nil
 }
+
+// Função para verificar se uma coluna é chave primária
+func IsPrimaryKey(connectionName, tableName, columnName string) (bool, error) {
+	var database models.Database
+
+	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+	if err != nil {
+		return false, fmt.Errorf("Error reading JSON: %v", err)
+	}
+
+	// Encontrar a conexão correta com base no connectionName
+	var conn *models.Connections
+	for _, connection := range database.Connections {
+		if connection.ConnectionName == connectionName {
+			conn = &connection
+			break
+		}
+	}
+
+	if conn == nil {
+		return false, fmt.Errorf("Conexão com o nome '%s' não foi encontrada.", connectionName)
+	}
+
+	db, err := ConnectToDatabase(*conn)
+	if err != nil {
+		return false, fmt.Errorf("Failed to connect to %s: %v", conn.DatabaseName, err)
+	}
+	defer db.Close()
+
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM information_schema.table_constraints AS tc
+			JOIN information_schema.key_column_usage AS kcu
+			ON tc.constraint_name = kcu.constraint_name
+			WHERE tc.table_name = $1 AND kcu.column_name = $2 AND tc.constraint_type = 'PRIMARY KEY'
+		)`
+
+	var result bool
+	err = db.QueryRow(query, tableName, columnName).Scan(&result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// Função para verificar se uma coluna aceita valores nulos
+func IsNullable(connectionName, tableName, columnName string) (bool, error) {
+	var database models.Database
+
+	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+	if err != nil {
+		return false, fmt.Errorf("Error reading JSON: %v", err)
+	}
+
+	// Encontrar a conexão correta com base no connectionName
+	var conn *models.Connections
+	for _, connection := range database.Connections {
+		if connection.ConnectionName == connectionName {
+			conn = &connection
+			break
+		}
+	}
+
+	if conn == nil {
+		return false, fmt.Errorf("Conexão com o nome '%s' não foi encontrada.", connectionName)
+	}
+
+	db, err := ConnectToDatabase(*conn)
+	if err != nil {
+		return false, fmt.Errorf("Failed to connect to %s: %v", conn.DatabaseName, err)
+	}
+	defer db.Close()
+
+	query := `
+		SELECT is_nullable = 'YES'
+		FROM information_schema.columns
+		WHERE table_name = $1 AND column_name = $2
+	`
+
+	var result bool
+	err = db.QueryRow(query, tableName, columnName).Scan(&result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// Função para verificar se uma coluna é única
+func IsUnique(connectionName, tableName, columnName string) (bool, error) {
+	var database models.Database
+
+	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+	if err != nil {
+		return false, fmt.Errorf("Error reading JSON: %v", err)
+	}
+
+	// Encontrar a conexão correta com base no connectionName
+	var conn *models.Connections
+	for _, connection := range database.Connections {
+		if connection.ConnectionName == connectionName {
+			conn = &connection
+			break
+		}
+	}
+
+	if conn == nil {
+		return false, fmt.Errorf("Conexão com o nome '%s' não foi encontrada.", connectionName)
+	}
+
+	db, err := ConnectToDatabase(*conn)
+	if err != nil {
+		return false, fmt.Errorf("Failed to connect to %s: %v", conn.DatabaseName, err)
+	}
+	defer db.Close()
+
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM information_schema.table_constraints AS tc
+			JOIN information_schema.constraint_column_usage AS ccu
+			ON tc.constraint_name = ccu.constraint_name
+			WHERE tc.table_name = $1 AND ccu.column_name = $2 AND tc.constraint_type = 'UNIQUE'
+		)`
+
+	var result bool
+	err = db.QueryRow(query, tableName, columnName).Scan(&result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
