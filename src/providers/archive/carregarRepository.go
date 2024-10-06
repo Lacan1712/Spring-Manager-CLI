@@ -51,7 +51,7 @@ func normalizeRepositoryPath(repositoryPath string) string {
 func extractDirectoryAndRepositoryName(repositoryPath string) (string, string) {
     parts := strings.Split(repositoryPath, "/")
     file := parts[len(parts)-1] // O último item é o nome do arquivo
-    dir := filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
+    dir := "src/main/java"+filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
 
     repositoryName := strings.TrimSuffix(file, filepath.Ext(file))
     if repositoryName == "" {
