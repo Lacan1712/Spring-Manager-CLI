@@ -221,16 +221,22 @@ func IsPrimaryKey(connectionName, tableName, columnName string) (bool, error) {
 	defer db.Close()
 
 	query := `
-		SELECT EXISTS (
-			SELECT 1
-			FROM information_schema.table_constraints AS tc
-			JOIN information_schema.key_column_usage AS kcu
-			ON tc.constraint_name = kcu.constraint_name
-			WHERE tc.table_name = $1 AND kcu.column_name = $2 AND tc.constraint_type = 'PRIMARY KEY'
-		)`
+    	SELECT EXISTS (
+        	SELECT 1
+        	FROM information_schema.table_constraints AS tc
+        	JOIN information_schema.key_column_usage AS kcu
+        	ON tc.constraint_name = kcu.constraint_name
+        	WHERE tc.table_schema = $1 AND tc.table_name = $2 
+        	AND kcu.column_name = $3 AND tc.constraint_type = 'PRIMARY KEY'
+    	)`
+
+	schema := "public"
+    if conn.Schema != "" {
+        schema = conn.Schema
+    }
 
 	var result bool
-	err = db.QueryRow(query, tableName, columnName).Scan(&result)
+	err = db.QueryRow(query, schema, tableName, columnName).Scan(&result)
 	if err != nil {
 		return false, err
 	}
@@ -276,13 +282,17 @@ func IsNullable(connectionName, tableName, columnName string) (bool, error) {
 	defer db.Close()
 
 	query := `
-		SELECT is_nullable = 'YES'
-		FROM information_schema.columns
-		WHERE table_name = $1 AND column_name = $2
+    	SELECT is_nullable = 'YES'
+    	FROM information_schema.columns
+    	WHERE table_schema = $1 AND table_name = $2 AND column_name = $3
 	`
+	schema := "public"
+    if conn.Schema != "" {
+        schema = conn.Schema
+    }
 
 	var result bool
-	err = db.QueryRow(query, tableName, columnName).Scan(&result)
+	err = db.QueryRow(query, schema, tableName, columnName).Scan(&result)
 	if err != nil {
 		return false, err
 	}
@@ -334,11 +344,17 @@ func IsUnique(connectionName, tableName, columnName string) (bool, error) {
 			FROM information_schema.table_constraints AS tc
 			JOIN information_schema.constraint_column_usage AS ccu
 			ON tc.constraint_name = ccu.constraint_name
-			WHERE tc.table_name = $1 AND ccu.column_name = $2 AND tc.constraint_type = 'UNIQUE'
+			WHERE tc.table_schema = $1 AND tc.table_name = $2 
+			AND ccu.column_name = $3 AND tc.constraint_type = 'UNIQUE'
 		)`
 
+	schema := "public"
+    if conn.Schema != "" {
+        schema = conn.Schema
+    }
+
 	var result bool
-	err = db.QueryRow(query, tableName, columnName).Scan(&result)
+	err = db.QueryRow(query, schema, tableName, columnName).Scan(&result)
 	if err != nil {
 		return false, err
 	}
