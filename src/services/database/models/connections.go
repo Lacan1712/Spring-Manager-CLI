@@ -16,6 +16,9 @@ type Database struct {
 }
 
 type Column struct {
-	Name string
-	Type string
+	Name         string
+	Type         string
+	IsPrimaryKey bool
+	IsNullable   bool
+	IsUnique     bool
 }
