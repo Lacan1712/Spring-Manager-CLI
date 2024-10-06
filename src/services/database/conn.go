@@ -17,11 +17,11 @@ func ConnectToDatabase(conn models.Connections) (*sql.DB, error) {
     var dsn string 
 
     switch conn.DriveDatabase {
-    case "MySQL":
+    case "mysql":
         dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s", conn.Username, conn.Password, conn.Host, conn.DatabaseName)
     case "postgres":
         dsn = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", conn.Host, conn.Port, conn.Username, conn.Password, conn.DatabaseName)
-    case "SQLServer":
+    case "sqlserve":
         dsn = fmt.Sprintf("sqlserver://%s:%s@%s?database=%s", conn.Username, conn.Password, conn.Host, conn.DatabaseName)
     default:
         return nil, fmt.Errorf("unsupported database type: %s", conn.DriveDatabase)
