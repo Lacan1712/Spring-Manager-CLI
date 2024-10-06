@@ -9,6 +9,8 @@ import(
     _ "github.com/denisenkom/go-mssqldb"
     models "smc/src/services/database/models"
 	"database/sql"
+	"os"
+    "path/filepath"
 )
 
 func ConnectToDatabase(conn models.Connections) (*sql.DB, error) {
@@ -41,7 +43,17 @@ func ConnectToDatabase(conn models.Connections) (*sql.DB, error) {
 func ListTablesDB(connectionName string) {
     var database models.Database
 
-    err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+	execPath, err := os.Executable()
+    if err != nil {
+        fmt.Errorf("Erro ao obter o caminho do executável: %v", err)
+    }
+
+    execDir := filepath.Dir(execPath)
+
+    filePath := filepath.Join(execDir, "json", "database.json")
+
+	err = jsonservice.MappingStructToJson(filePath, &database)
+
     if err != nil {
         fmt.Printf("Error reading JSON: %v", err)
 		return
@@ -101,8 +113,17 @@ func ListTablesDB(connectionName string) {
 
 func ListColumnsDB(connectionName, tableName string) ([]models.Column, error) {
 	var database models.Database
+	execPath, err := os.Executable()
+    if err != nil {
+        return nil, fmt.Errorf("Erro ao obter o caminho do executável: %v", err)
+    }
 
-	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+    execDir := filepath.Dir(execPath)
+
+    filePath := filepath.Join(execDir, "json", "database.json")
+
+	err = jsonservice.MappingStructToJson(filePath, &database)
+
 	if err != nil {
 		return nil, fmt.Errorf("Error reading JSON: %v", err)
 	}
@@ -166,7 +187,16 @@ func ListColumnsDB(connectionName, tableName string) ([]models.Column, error) {
 func IsPrimaryKey(connectionName, tableName, columnName string) (bool, error) {
 	var database models.Database
 
-	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+	execPath, err := os.Executable()
+    if err != nil {
+        return false, fmt.Errorf("Erro ao obter o caminho do executável: %v", err)
+    }
+
+    execDir := filepath.Dir(execPath)
+
+    filePath := filepath.Join(execDir, "json", "database.json")
+
+	err = jsonservice.MappingStructToJson(filePath, &database)
 	if err != nil {
 		return false, fmt.Errorf("Error reading JSON: %v", err)
 	}
@@ -211,8 +241,17 @@ func IsPrimaryKey(connectionName, tableName, columnName string) (bool, error) {
 // Função para verificar se uma coluna aceita valores nulos
 func IsNullable(connectionName, tableName, columnName string) (bool, error) {
 	var database models.Database
+	execPath, err := os.Executable()
+    if err != nil {
+        return false, fmt.Errorf("Erro ao obter o caminho do executável: %v", err)
+    }
 
-	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+    execDir := filepath.Dir(execPath)
+
+    filePath := filepath.Join(execDir, "json", "database.json")
+
+	err = jsonservice.MappingStructToJson(filePath, &database)
+
 	if err != nil {
 		return false, fmt.Errorf("Error reading JSON: %v", err)
 	}
@@ -254,8 +293,18 @@ func IsNullable(connectionName, tableName, columnName string) (bool, error) {
 // Função para verificar se uma coluna é única
 func IsUnique(connectionName, tableName, columnName string) (bool, error) {
 	var database models.Database
+	execPath, err := os.Executable()
+	
+    if err != nil {
+        return false, fmt.Errorf("Erro ao obter o caminho do executável: %v", err)
+    }
 
-	err := jsonservice.MappingStructToJson("/home/rodrigo/Documentos Local/Projetos/Go/SMC/src/cmd/databasecommands/database.json", &database)
+    execDir := filepath.Dir(execPath)
+
+    filePath := filepath.Join(execDir, "json", "database.json")
+
+	err = jsonservice.MappingStructToJson(filePath, &database)
+
 	if err != nil {
 		return false, fmt.Errorf("Error reading JSON: %v", err)
 	}
