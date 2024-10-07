@@ -51,7 +51,7 @@ func normalizeEntityPath(entityPath string) string {
 func extractDirectoryAndEntityName(entityPath string) (string, string) {
     parts := strings.Split(entityPath, "/")
     file := parts[len(parts)-1] // O último item é o nome do arquivo
-    dir := filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
+    dir := filepath.Join("src", "main", "java",filepath.Join(parts[:len(parts)-1]...))
 
     entityName := strings.TrimSuffix(file, filepath.Ext(file))
     if entityName == "" {
@@ -61,11 +61,16 @@ func extractDirectoryAndEntityName(entityPath string) (string, string) {
 }
 
 func convertDirToPackageNameEntity(dir string) string {
+    dir = strings.Replace(dir, "src/main/java/", "", 1)
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
+
     return strings.Trim(strings.ToLower(packageName), ".")
 }
 
 func createDirectoryIfNotExistsEntity(dir string) {
+    if(dir == ""){
+        dir = "entity"
+    }
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
@@ -95,6 +100,5 @@ func writeEntityFile(tmpl *template.Template, dir, entityName, packageName strin
     if err := tmpl.Execute(outputFile, data); err != nil {
         log.Fatalf("Erro ao executar o template: %v", err)
     }
-
     fmt.Printf("Entity %s criado com sucesso em %s\n", entityName, outputFilePath)
 }

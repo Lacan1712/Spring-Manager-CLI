@@ -51,7 +51,7 @@ func normalizeControllerPath(controllerPath string) string {
 func extractDirectoryAndControllerName(controllerPath string) (string, string) {
     parts := strings.Split(controllerPath, "/")
     file := parts[len(parts)-1] // O último item é o nome do arquivo
-    dir := filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
+    dir := filepath.Join("src", "main", "java",filepath.Join(parts[:len(parts)-1]...))
 
     controllerName := strings.TrimSuffix(file, filepath.Ext(file))
     if controllerName == "" {
@@ -61,11 +61,15 @@ func extractDirectoryAndControllerName(controllerPath string) (string, string) {
 }
 
 func convertDirToPackageNameController(dir string) string {
+    dir = strings.Replace(dir, "src/main/java/", "", 1)
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
     return strings.Trim(strings.ToLower(packageName), ".")
 }
 
 func createDirectoryIfNotExistsController(dir string) {
+    if(dir == ""){
+        dir = "controller"
+    }
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
