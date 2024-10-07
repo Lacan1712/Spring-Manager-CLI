@@ -23,6 +23,8 @@ smc --command
 #### 1. `init`
 ```bash
 
+```bash
+
 
 O comando `init` é utilizado para inicializar um novo projeto Spring Boot com as configurações padrão.
 
@@ -38,6 +40,7 @@ O projeto será configurado com as dependências e arquivos básicos necessário
 
 ```
 #### 2. `init --custom`
+```bash
 ```bash
 O comando `init -costum` é utilizado para inicializar um novo projeto mas com parâmetros personalizados.
 
