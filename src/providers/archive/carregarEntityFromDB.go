@@ -96,6 +96,8 @@ func extractDirectoryAndEntityNameFB(entityPath string) (string, string) {
 }
 
 func convertDirToPackageNameEntityFB(dir string) string {
+	dir = strings.Replace(dir, "src/main/java/", "", 1)
+
 	packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
 	return strings.Trim(strings.ToLower(packageName), ".")
 }

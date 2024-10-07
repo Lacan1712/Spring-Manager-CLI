@@ -61,6 +61,8 @@ func extractDirectoryAndRepositoryName(repositoryPath string) (string, string) {
 }
 
 func convertDirToPackageNameRepository(dir string) string {
+    dir = strings.Replace(dir, "src/main/java/", "", 1)
+
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
     return strings.Trim(strings.ToLower(packageName), ".")
 }

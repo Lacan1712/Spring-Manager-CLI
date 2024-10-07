@@ -61,7 +61,9 @@ func extractDirectoryAndEntityName(entityPath string) (string, string) {
 }
 
 func convertDirToPackageNameEntity(dir string) string {
+    dir = strings.Replace(dir, "src/main/java/", "", 1)
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
+
     return strings.Trim(strings.ToLower(packageName), ".")
 }
 
@@ -98,6 +100,5 @@ func writeEntityFile(tmpl *template.Template, dir, entityName, packageName strin
     if err := tmpl.Execute(outputFile, data); err != nil {
         log.Fatalf("Erro ao executar o template: %v", err)
     }
-
     fmt.Printf("Entity %s criado com sucesso em %s\n", entityName, outputFilePath)
 }
