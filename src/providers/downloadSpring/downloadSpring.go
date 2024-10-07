@@ -1,8 +1,8 @@
 package providers
 
 import (
-	"SMC/src/providers/zip"
-	"SMC/src/services/api"
+	"smc/src/providers/zip"
+	"smc/src/services/api"
 	"fmt"
 	"io"
 	"log"
@@ -70,6 +70,6 @@ func DownloadSpringBootProject(config ProjectConfig) {
 		return
 	}
 
-	fmt.Println("Projeto Spring Boot baixado com sucesso como demo.zip!")
+	fmt.Println("Projeto Spring Boot baixado com sucesso como App!")
 
 }

@@ -1,0 +1,12 @@
+{
+    "connections": [
+        {   "connectionName":"myPostgres",
+            "driveDatabase": "postgres",
+            "databaseName": "Judic",
+            "host": "localhost",
+            "port":"5432",
+            "username": "postgres",
+            "password": "La0945687!"
+        }
+    ]
+}

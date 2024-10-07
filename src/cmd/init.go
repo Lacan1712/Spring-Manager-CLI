@@ -1,7 +1,8 @@
 package cmd
 
 import (
-	createProject "SMC/src/providers/downloadSpring"
+	createProject "smc/src/providers/downloadSpring"
+	ascii_apresentation "smc/src/ascii_texts"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -13,7 +14,7 @@ var initCmd = &cobra.Command{
 	Short: "Baixa um projeto Spring Boot da API pública",
 	Run: func(cmd *cobra.Command, args []string) {
 		custom, _ := cmd.Flags().GetBool("custom")
-
+		ascii_apresentation.Apresentation()
 		if custom {
 			fmt.Println("Instalação customizada!")
 
