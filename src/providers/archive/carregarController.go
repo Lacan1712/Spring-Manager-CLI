@@ -51,7 +51,7 @@ func normalizeControllerPath(controllerPath string) string {
 func extractDirectoryAndControllerName(controllerPath string) (string, string) {
     parts := strings.Split(controllerPath, "/")
     file := parts[len(parts)-1] // O último item é o nome do arquivo
-    dir := "src/main/java"+filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
+    dir := filepath.Join("src", "main", "java",filepath.Join(parts[:len(parts)-1]...))
 
     controllerName := strings.TrimSuffix(file, filepath.Ext(file))
     if controllerName == "" {

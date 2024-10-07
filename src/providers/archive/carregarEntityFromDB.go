@@ -86,7 +86,7 @@ func normalizeEntityPathFB(entityPath string) string {
 func extractDirectoryAndEntityNameFB(entityPath string) (string, string) {
 	parts := strings.Split(entityPath, "/")
 	file := parts[len(parts)-1] // O último item é o nome do arquivo
-    dir := "src/main/java"+filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
+    dir := filepath.Join("src", "main", "java",filepath.Join(parts[:len(parts)-1]...))
 
 	entityName := strings.TrimSuffix(file, filepath.Ext(file))
 	if entityName == "" {
