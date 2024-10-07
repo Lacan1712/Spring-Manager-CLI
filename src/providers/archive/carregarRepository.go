@@ -51,7 +51,7 @@ func normalizeRepositoryPath(repositoryPath string) string {
 func extractDirectoryAndRepositoryName(repositoryPath string) (string, string) {
     parts := strings.Split(repositoryPath, "/")
     file := parts[len(parts)-1] // O último item é o nome do arquivo
-    dir := filepath.Join(parts[:len(parts)-1]...) // O restante forma o diretório
+    dir := filepath.Join("src", "main", "java",filepath.Join(parts[:len(parts)-1]...))
 
     repositoryName := strings.TrimSuffix(file, filepath.Ext(file))
     if repositoryName == "" {
@@ -61,11 +61,16 @@ func extractDirectoryAndRepositoryName(repositoryPath string) (string, string) {
 }
 
 func convertDirToPackageNameRepository(dir string) string {
+    dir = strings.Replace(dir, "src/main/java/", "", 1)
+
     packageName := strings.ReplaceAll(filepath.ToSlash(dir), "/", ".")
     return strings.Trim(strings.ToLower(packageName), ".")
 }
 
 func createDirectoryIfNotExistsRepository(dir string) {
+    if(dir == ""){
+        dir = "repository"
+    }
     if err := os.MkdirAll(dir, os.ModePerm); err != nil {
         log.Fatalf("Erro ao criar o diretório %s: %v", dir, err)
     }
